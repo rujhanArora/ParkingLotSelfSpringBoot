@@ -24,13 +24,12 @@ public class BookingService {
     public Booking checkIn(String customerId, String vehicleId, String parkingSpotId) {
         spotService.bookSpot(parkingSpotId);
         Booking booking = new Booking(customerId, vehicleId, parkingSpotId);
-        log.info("Created Booking: {}", booking);
         bookings.add(booking);
         int bookingIndex = bookings.size() - 1;
         customerIdToBookingsIndex.computeIfAbsent(customerId, spots -> new ArrayList<>())
                 .add(bookingIndex);
         idToBookingIndex.put(booking.getId(), bookingIndex);
-        log.info("booking: {}", booking);
+        log.info("Created Booking: {}", booking);
         return booking;
     }
 

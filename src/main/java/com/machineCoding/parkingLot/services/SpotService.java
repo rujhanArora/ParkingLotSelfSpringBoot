@@ -14,7 +14,7 @@ import java.util.*;
 public class SpotService {
     List<ParkingSpot> parkingSpotList = new ArrayList<>();
     private Map<String, Integer> idToSpotsIndex = new HashMap<>();
-    private Map<String, List<Integer>> floorToSpotsIndex = new HashMap<>();
+    private Map<String, List<Integer>> floorIdToSpotsIndex = new HashMap<>();
     private Map<ParkingSpotType, List<Integer>> spotTypeToSpotsIndex = new HashMap<>();
     private static Map<VehicleType, List<ParkingSpotType>> VehicleTypeToParkingSpotType = new HashMap<>();
     static {
@@ -36,23 +36,15 @@ public class SpotService {
         }
         parkingSpotList.add(addedSpot);
         int addedSpotIndex = parkingSpotList.size() - 1;
-        floorToSpotsIndex.computeIfAbsent(floorId, spots -> new ArrayList<>())
+        floorIdToSpotsIndex.computeIfAbsent(floorId, spots -> new ArrayList<>())
                 .add(addedSpotIndex);
         spotTypeToSpotsIndex.computeIfAbsent(spotType, spots -> new ArrayList<>())
                 .add(addedSpotIndex);
         idToSpotsIndex.put(addedSpot.getId(), addedSpotIndex);
-        printData();
         return addedSpot;
     }
 
-    // Just for demonstration purpose
-    private void printData() {
-        log.info("parkingSpotList: {}", parkingSpotList);
-        log.info("floorToSpotsIndex: {}", floorToSpotsIndex);
-        log.info("spotTypeToSpotsIndex: {}", spotTypeToSpotsIndex);
-    }
-
-    public Optional<ParkingSpot> getFirstEmptySpot(VehicleType vehicleType) {
+    private Optional<ParkingSpot> getFirstEmptySpot(VehicleType vehicleType) {
         List<ParkingSpotType> parkingSpotTypeList = VehicleTypeToParkingSpotType.get(vehicleType);
         for (ParkingSpotType parkingSpotType: parkingSpotTypeList) {
             List<Integer> spotIndices = spotTypeToSpotsIndex.get(parkingSpotType);
